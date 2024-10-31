@@ -10,7 +10,7 @@ import matplotlib.pyplot as plt
 
 # Function to fetch historical data
 def fetch_data(tickers):
-    data = yf.download(tickers, period='5y')['Adj Close']
+    data = yf.download(tickers, period=period)['Adj Close']
     return data
 
 # Function to calculate portfolio standard deviation
@@ -26,6 +26,7 @@ st.title('Portfolio Standard Deviation Calculator')
 # User input for tickers and shares
 tickers = st.text_input('Enter your holding tickers (comma separated)', 'AAPL, MSFT, GOOGL')
 shares = st.text_input('Enter the number of shares for each ticker (comma separated)', '10.13, 15.5, 20.75')
+period = st.selectbox('Select the period for historical data', ['1d', '5d', '1mo', '3mo', '6mo', '1y', '2y', '5y', '10y', 'ytd', 'max'])
 
 if st.button('Calculate'):
     tickers = [ticker.strip() for ticker in tickers.split(',')]
