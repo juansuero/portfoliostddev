@@ -37,10 +37,6 @@ This Streamlit application allows users to calculate the standard deviation of t
 
 5. Click the "Calculate" button to see the daily standard deviation of your portfolio and the correlation matrix.
 
-## Example
-
-![Example](example.png)
-
 ## Dependencies
 
 - streamlit
@@ -52,4 +48,4 @@ This Streamlit application allows users to calculate the standard deviation of t
 
 ## License
 
-This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for details.
+This project is licensed under the MIT License.
