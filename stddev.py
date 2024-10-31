@@ -1,71 +1,42 @@
+# Install necessary libraries
+# !pip install streamlit yfinance pandas numpy seaborn matplotlib
+
 import streamlit as st
+import yfinance as yf
 import pandas as pd
 import numpy as np
-import yfinance as yf
+import seaborn as sns
 import matplotlib.pyplot as plt
 
-# Streamlit app title
-st.title("Portfolio Standard Deviation and Diversification Checker")
+# Function to fetch historical data
+def fetch_data(tickers):
+    data = yf.download(tickers, period='5y')['Adj Close']
+    return data
 
-# Step 1: User Inputs
-st.header("Enter Your Portfolio Holdings")
+# Function to calculate portfolio standard deviation
+def calculate_portfolio_std(data, shares):
+    returns = data.pct_change().dropna()
+    weights = np.array(shares) / np.sum(shares)
+    portfolio_std = np.sqrt(np.dot(weights.T, np.dot(returns.cov() * 252, weights)))
+    return portfolio_std * 100, returns.corr()  # Convert to percentage
 
-# User inputs tickers and quantities
-tickers = st.text_input("Enter Ticker Symbols (separated by commas)").split(',')
-shares = st.text_input("Enter Shares Owned for Each Ticker (in same order, separated by commas)").split(',')
+# Streamlit app
+st.title('Portfolio Standard Deviation Calculator')
 
-# Validate user inputs
-try:
-    shares = [float(s) for s in shares]
-    tickers = [t.strip().upper() for t in tickers]
-    if len(tickers) != len(shares):
-        st.error("Please ensure each ticker has a corresponding share amount.")
-    else:
-        # Step 2: Data Retrieval
-        st.subheader("Fetching Stock Data...")
-        
-        # Download data for tickers
-        data = yf.download(tickers, period="1y")['Adj Close']
-        
-        # Calculate daily returns
-        daily_returns = data.pct_change().dropna()
-        
-        # Step 3: Daily Standard Deviation and Correlation Matrix
-        st.subheader("Daily Standard Deviation and Correlation Matrix")
-        
-        # Calculate daily standard deviation for each ticker
-        daily_std = daily_returns.std()
-        
-        # Display individual daily standard deviations
-        st.write("Daily Standard Deviation of Each Stock:")
-        st.write(daily_std)
-        
-        # Correlation matrix for diversification insights
-        corr_matrix = daily_returns.corr()
-        st.write("Correlation Matrix:")
-        st.write(corr_matrix)
-        
-        # Step 4: Portfolio Standard Deviation Calculation
-        st.subheader("Portfolio Standard Deviation")
-        
-        # Calculate weights based on the number of shares and current prices
-        total_value = sum(shares[i] * data[tickers[i]].iloc[-1] for i in range(len(tickers)))
-        weights = [shares[i] * data[tickers[i]].iloc[-1] / total_value for i in range(len(tickers))]
-        
-        # Portfolio standard deviation
-        port_variance = np.dot(weights, np.dot(daily_returns.cov(), weights))
-        port_std = np.sqrt(port_variance)
-        
-        st.write(f"Portfolio Standard Deviation: {port_std:.4f}")
-        
-        # Step 5: Visualization of Correlation Matrix
-        st.subheader("Correlation Matrix Heatmap")
-        fig, ax = plt.subplots()
-        cax = ax.matshow(corr_matrix, cmap="coolwarm")
-        fig.colorbar(cax)
-        plt.xticks(range(len(tickers)), tickers, rotation=90)
-        plt.yticks(range(len(tickers)), tickers)
-        st.pyplot(fig)
-        
-except Exception as e:
-    st.error(f"Error: {e}")
+# User input for tickers and shares
+tickers = st.text_input('Enter your holding tickers (comma separated)', 'AAPL, MSFT, GOOGL')
+shares = st.text_input('Enter the number of shares for each ticker (comma separated)', '10.13, 15.5, 20.75')
+
+if st.button('Calculate'):
+    tickers = [ticker.strip() for ticker in tickers.split(',')]
+    shares = [float(share.strip()) for share in shares.split(',')]
+    
+    data = fetch_data(tickers)
+    portfolio_std, corr_matrix = calculate_portfolio_std(data, shares)
+    
+    st.write(f'Daily Standard Deviation of Portfolio: {portfolio_std:.2f}%')
+    
+    st.write('Correlation Matrix:')
+    fig, ax = plt.subplots()
+    sns.heatmap(corr_matrix, annot=True, cmap='coolwarm', ax=ax)
+    st.pyplot(fig)
