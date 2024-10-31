@@ -1,21 +1,55 @@
-# Portfolio Standard Deviation and Diversification Checker
+# Portfolio Standard Deviation Calculator
 
-This Streamlit app allows users to input their stock portfolio and view key metrics like the daily standard deviation of individual holdings, a correlation matrix for diversification analysis, and the overall portfolio standard deviation. This app is ideal for portfolio risk assessment and understanding diversification.
+This Streamlit application allows users to calculate the standard deviation of their portfolio. Users can input their holding tickers and the number of shares they own for each. The application fetches historical stock data, calculates the daily standard deviation for the holdings, creates a correlation matrix to show how well diversified the portfolio is, and displays the standard deviation of the portfolio.
 
 ## Features
-- **Ticker and Shares Input**: Enter stock tickers and corresponding shares owned.
-- **Daily Standard Deviation Calculation**: Displays daily volatility for each holding.
-- **Diversification Check**: Shows a correlation matrix to help assess portfolio diversification.
-- **Portfolio Standard Deviation**: Calculates the overall portfolio standard deviation based on asset weights and daily returns.
-- **Correlation Matrix Heatmap**: Visual representation of the correlation matrix to aid in identifying correlations among holdings.
+
+- Input holding tickers and number of shares.
+- Select the period for historical data.
+- Calculate daily standard deviation of the portfolio.
+- Display a correlation matrix as a heatmap.
 
 ## Installation
 
-### Prerequisites
-- Python 3.8 or higher
+1. Clone the repository:
+    ```sh
+    git clone https://github.com/yourusername/your-repo-name.git
+    cd your-repo-name
+    ```
 
-### Steps
-1. **Clone the repository**:
-   ```bash
-   git clone <repository-url>
-   cd portfolio-standard-deviation
+2. Install the required libraries:
+    ```sh
+    pip install -r requirements.txt
+    ```
+
+## Usage
+
+1. Run the Streamlit app:
+    ```sh
+    streamlit run stddev.py
+    ```
+
+2. Open your web browser and go to `http://localhost:8501`.
+
+3. Enter your holding tickers (comma separated) and the number of shares for each ticker (comma separated).
+
+4. Select the period for historical data.
+
+5. Click the "Calculate" button to see the daily standard deviation of your portfolio and the correlation matrix.
+
+## Example
+
+![Example](example.png)
+
+## Dependencies
+
+- streamlit
+- yfinance
+- pandas
+- numpy
+- seaborn
+- matplotlib
+
+## License
+
+This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for details.
