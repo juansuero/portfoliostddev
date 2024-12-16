@@ -106,7 +106,7 @@ if st.button('Calculate'):
         
         st.write('Correlation Matrix:')
         fig, ax = plt.subplots()
-        sns.heatmap(corr_matrix, annot=True, cmap='coolwarm', ax=ax)
+        sns.heatmap(corr_matrix, annot=True, cmap='coolwarm', ax=ax, vmin=-1, vmax=1, center=0)
         st.pyplot(fig)
     except Exception as e:
         st.error(f"Error calculating portfolio metrics: {str(e)}")
